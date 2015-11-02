@@ -9,13 +9,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.client.utils.URIBuilder;
 
 /**
  * Created by bschmeckpeper on 11/1/15.
  */
 public class PhotoSearch {
-    private static String GIS_BASE_URL = "https://ajax.googleapis.com/ajax/services/search/images";
+    private static String GIS_SCHEME = "https";
+    private static String GIS_HOST = "ajax.googleapis.com";
+    private static String GIS_PATH = "/ajax/services/search/images";
     private static int GIS_RESULT_SIZE = 8;
 
     private String query;
@@ -40,9 +46,23 @@ public class PhotoSearch {
             return;
         }
         this.requestInFlight = true;
-        String url = GIS_BASE_URL + "?v=1.0&q=" + query + "&rsz=" + GIS_RESULT_SIZE; // + ""&start=" + this.start;
+        URIBuilder builder = new URIBuilder();
+        builder.setScheme(GIS_SCHEME);
+        builder.setHost(GIS_HOST);
+        builder.setPath(GIS_PATH);
+        builder.addParameter("v", "1.0");
+        builder.addParameter("q", query);
+        builder.addParameter("rsz", Integer.toString(GIS_RESULT_SIZE));
+        builder.addParameter("start", Integer.toString(this.start));
         AsyncHttpClient client = new AsyncHttpClient();
-        client.get(url, null, new JsonHttpResponseHandler() {
+        URI uri;
+        try {
+            uri = builder.build();
+            Log.i("DEBUG", "URI: " + uri.toString());
+        } catch (URISyntaxException e) {
+            return;
+        }
+        client.get(uri.toString(), null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
