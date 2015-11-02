@@ -8,6 +8,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.GridView;
 
+import com.s10r.photosearch.searcher.PhotoSearch;
+import com.s10r.photosearch.searcher.Callback;
+
 import java.util.ArrayList;
 
 public class PhotoGrid extends AppCompatActivity {
@@ -38,7 +41,7 @@ public class PhotoGrid extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(final String query) {
                 adapter.clear();
-                if (searcher.prepare(query, new PhotoSearch.SearchCallback(){
+                if (searcher.prepare(query, new Callback(){
                     @Override
                     public void result(SearchResult searchResult) {
                         adapter.add(searchResult);

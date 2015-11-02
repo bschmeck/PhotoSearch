@@ -1,9 +1,10 @@
-package com.s10r.photosearch;
+package com.s10r.photosearch.searcher;
 
 import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.s10r.photosearch.SearchResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,11 +26,11 @@ public class PhotoSearch {
     private static int GIS_RESULT_SIZE = 8;
 
     private String query;
-    private SearchCallback callback;
+    private Callback callback;
     private int start;
     private boolean requestInFlight = false;
 
-    public boolean prepare(String query, SearchCallback callback) {
+    public boolean prepare(String query, Callback callback) {
         if (this.requestInFlight) {
             return false;
         }
@@ -88,9 +89,5 @@ public class PhotoSearch {
                 super.onFailure(statusCode, headers, responseString, throwable);
             }
         });
-    }
-
-    public static abstract class SearchCallback {
-        public abstract void result(SearchResult searchResult);
     }
 }
