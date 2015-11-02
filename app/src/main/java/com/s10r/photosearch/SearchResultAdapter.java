@@ -52,6 +52,7 @@ public class SearchResultAdapter extends ArrayAdapter<SearchResult> {
                 .load(searchResult.getImageUrl())
                 .placeholder(R.drawable.placeholder)
                 .error(R.drawable.broken_image)
+                .fit()
                 .into(viewHolder.ivImage);
     }
 }

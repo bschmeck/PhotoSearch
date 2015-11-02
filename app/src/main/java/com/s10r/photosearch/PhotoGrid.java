@@ -8,21 +8,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.GridView;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-
-import cz.msebera.android.httpclient.Header;
 
 public class PhotoGrid extends AppCompatActivity {
 
     private ArrayList<SearchResult> results;
     private SearchResultAdapter adapter;
+    private PhotoSearch searcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +24,7 @@ public class PhotoGrid extends AppCompatActivity {
         adapter = new SearchResultAdapter(this, results);
         GridView gvResults = (GridView)findViewById(R.id.gridView);
         gvResults.setAdapter(adapter);
+        this.searcher = new PhotoSearch();
     }
 
     @Override
@@ -45,35 +38,15 @@ public class PhotoGrid extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(final String query) {
                 adapter.clear();
-                String gisBaseUrl = "https://ajax.googleapis.com/ajax/services/search/images";
-                String url = gisBaseUrl + "?v=1.0&q=" + query;
-                AsyncHttpClient client = new AsyncHttpClient();
-                client.get(url, null, new JsonHttpResponseHandler() {
+                if (searcher.prepare(query, new PhotoSearch.SearchCallback(){
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        try {
-                            JSONObject responseData = response.getJSONObject("responseData");
-                            JSONArray jsonResults = responseData.getJSONArray("results");
-                            for (int i = 0; i < jsonResults.length(); i++) {
-                                JSONObject result = jsonResults.getJSONObject(i);
-                                results.add(
-                                        new SearchResult(
-                                                query,
-                                                result.getString("url"),
-                                                result.getString("title")));
-
-                            }
-                            adapter.notifyDataSetChanged();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                    public void result(SearchResult searchResult) {
+                        adapter.add(searchResult);
                     }
+                })) {
+                    searcher.search();
+                }
 
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                        super.onFailure(statusCode, headers, responseString, throwable);
-                    }
-                });
                 return true;
             }
 
