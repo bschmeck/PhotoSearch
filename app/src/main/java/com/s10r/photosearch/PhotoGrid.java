@@ -26,8 +26,7 @@ public class PhotoGrid extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                TextView tvText = (TextView)findViewById(R.id.tvText);
-                tvText.setText(query);
+
                 return true;
             }
 
