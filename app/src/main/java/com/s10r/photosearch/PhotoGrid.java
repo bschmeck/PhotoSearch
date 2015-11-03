@@ -41,6 +41,15 @@ public class PhotoGrid extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        gvResults.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public boolean onLoadMore(int page, int totalItemsCount) {
+                if (searcher != null) {
+                    return searcher.next();
+                }
+                return false;
+            }
+        });
     }
 
     @Override

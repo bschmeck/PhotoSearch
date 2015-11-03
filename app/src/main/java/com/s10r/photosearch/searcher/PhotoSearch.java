@@ -44,16 +44,16 @@ public class PhotoSearch {
         return true;
     }
 
-    public void search() {
+    public boolean search() {
         if (this.requestInFlight) {
-            return;
+            return false;
         }
         this.requestInFlight = true;
         AsyncHttpClient client = new AsyncHttpClient();
         String uri = uri();
         if (uri == null) {
             Log.i("DEBUG", "Couldn't build URI.");
-            return;
+            return false;
         }
         client.get(uri, null, new JsonHttpResponseHandler() {
             @Override
@@ -61,7 +61,6 @@ public class PhotoSearch {
                 try {
                     JSONObject responseData = response.getJSONObject("responseData");
                     JSONArray jsonResults = responseData.getJSONArray("results");
-                    Log.i("DEBUG", "Got " + jsonResults.length() + " results");
                     for (int i = 0; i < jsonResults.length(); i++) {
                         JSONObject result = jsonResults.getJSONObject(i);
                         SearchResult searchResult = new SearchResult(query,
@@ -69,6 +68,7 @@ public class PhotoSearch {
                                                                     result.getString("title"));
                         callback.result(searchResult);
                     }
+                    PhotoSearch.this.start += jsonResults.length();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } finally {
@@ -81,6 +81,11 @@ public class PhotoSearch {
                 super.onFailure(statusCode, headers, responseString, throwable);
             }
         });
+        return true;
+    }
+
+    public boolean next() {
+        return search();
     }
 
     private String uri() {
