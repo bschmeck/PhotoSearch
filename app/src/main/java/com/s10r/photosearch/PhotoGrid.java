@@ -10,6 +10,7 @@ import android.widget.GridView;
 
 import com.s10r.photosearch.searcher.PhotoSearch;
 import com.s10r.photosearch.searcher.Callback;
+import com.s10r.photosearch.searcher.Settings;
 
 import java.util.ArrayList;
 
@@ -41,7 +42,7 @@ public class PhotoGrid extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(final String query) {
                 adapter.clear();
-                if (searcher.prepare(query, new Callback(){
+                if (searcher.prepare(query, new Settings(), new Callback(){
                     @Override
                     public void result(SearchResult searchResult) {
                         adapter.add(searchResult);

@@ -29,8 +29,9 @@ public class PhotoSearch {
     private Callback callback;
     private int start;
     private boolean requestInFlight = false;
+    private Settings settings;
 
-    public boolean prepare(String query, Callback callback) {
+    public boolean prepare(String query, Settings settings, Callback callback) {
         if (this.requestInFlight) {
             return false;
         }
@@ -38,6 +39,7 @@ public class PhotoSearch {
         this.callback = callback;
         this.start = 0;
         this.requestInFlight = false;
+        this.settings = settings;
 
         return true;
     }
@@ -47,23 +49,13 @@ public class PhotoSearch {
             return;
         }
         this.requestInFlight = true;
-        URIBuilder builder = new URIBuilder();
-        builder.setScheme(GIS_SCHEME);
-        builder.setHost(GIS_HOST);
-        builder.setPath(GIS_PATH);
-        builder.addParameter("v", "1.0");
-        builder.addParameter("q", query);
-        builder.addParameter("rsz", Integer.toString(GIS_RESULT_SIZE));
-        builder.addParameter("start", Integer.toString(this.start));
         AsyncHttpClient client = new AsyncHttpClient();
-        URI uri;
-        try {
-            uri = builder.build();
-            Log.i("DEBUG", "URI: " + uri.toString());
-        } catch (URISyntaxException e) {
+        String uri = uri();
+        if (uri == null) {
+            Log.i("DEBUG", "Couldn't build URI.");
             return;
         }
-        client.get(uri.toString(), null, new JsonHttpResponseHandler() {
+        client.get(uri, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
@@ -89,5 +81,36 @@ public class PhotoSearch {
                 super.onFailure(statusCode, headers, responseString, throwable);
             }
         });
+    }
+
+    private String uri() {
+        URIBuilder builder = new URIBuilder();
+        builder.setScheme(GIS_SCHEME);
+        builder.setHost(GIS_HOST);
+        builder.setPath(GIS_PATH);
+        builder.addParameter("v", "1.0");
+        builder.addParameter("q", query);
+        builder.addParameter("rsz", Integer.toString(GIS_RESULT_SIZE));
+        builder.addParameter("start", Integer.toString(this.start));
+        if (this.settings.isImageColorSet()) {
+            builder.addParameter("imgcolor", this.settings.getImageColor());
+        }
+        if (this.settings.isImageTypeSet()) {
+            builder.addParameter("imgtype", this.settings.getImageType());
+        }
+        if (this.settings.isSiteSet()) {
+            builder.addParameter("as_sitesearch", this.settings.getSite());
+        }
+        if (this.settings.imageSizeIsSet()) {
+            builder.addParameter("imgsz", this.settings.getImageSize());
+        }
+
+        URI uri;
+        try {
+            uri = builder.build();
+            return uri.toString();
+        } catch (URISyntaxException e) {
+            return null;
+        }
     }
 }
