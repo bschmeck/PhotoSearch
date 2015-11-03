@@ -92,17 +92,46 @@ public class PhotoSearch {
         builder.addParameter("q", query);
         builder.addParameter("rsz", Integer.toString(GIS_RESULT_SIZE));
         builder.addParameter("start", Integer.toString(this.start));
-        if (this.settings.isImageColorSet()) {
-            builder.addParameter("imgcolor", this.settings.getImageColor());
+        if (this.settings.getImageColor() != Settings.Color.ALL) {
+            String color = "";
+            switch (this.settings.getImageColor()) {
+                case BLACK: color = "black"; break;
+                case BLUE: color = "blue"; break;
+                case BROWN: color = "brown"; break;
+                case GRAY: color = "gray"; break;
+                case GREEN: color = "green"; break;
+                case ORANGE: color = "orange"; break;
+                case PINK: color = "pink"; break;
+                case PURPLE: color = "purple"; break;
+                case RED: color = "red"; break;
+                case TEAL: color = "teal"; break;
+                case WHITE: color = "white"; break;
+                case YELLOW: color = "yellow"; break;
+            }
+            builder.addParameter("imgcolor", color);
         }
-        if (this.settings.isImageTypeSet()) {
-            builder.addParameter("imgtype", this.settings.getImageType());
+        if (this.settings.getImageType() != Settings.Type.ALL) {
+            String type = "";
+            switch (this.settings.getImageType()) {
+                case FACE: type = "face"; break;
+                case LINEART: type = "lineart"; break;
+                case CLIPART: type = "clipart"; break;
+                case PHOTO: type = "photo"; break;
+            }
+            builder.addParameter("imgtype", type);
         }
         if (this.settings.isSiteSet()) {
             builder.addParameter("as_sitesearch", this.settings.getSite());
         }
-        if (this.settings.imageSizeIsSet()) {
-            builder.addParameter("imgsz", this.settings.getImageSize());
+        if (this.settings.getImageSize() != Settings.Size.ALL) {
+            String size = "";
+            switch (this.settings.getImageSize()) {
+                case SMALL: size = "icon";
+                case MEDIUM: size = "medium";
+                case LARGE: size = "xxlarge";
+                case XLARGE: size = "huge";
+            }
+            builder.addParameter("imgsz", size);
         }
 
         URI uri;
