@@ -22,6 +22,8 @@ public class PhotoGrid extends AppCompatActivity {
     private ArrayList<SearchResult> results;
     private SearchResultAdapter adapter;
     private PhotoSearch searcher;
+    private Settings settings;
+    private static int SETTINGS_CODE = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,8 @@ public class PhotoGrid extends AppCompatActivity {
                 return false;
             }
         });
+        this.settings = new Settings();
+        this.settings.setImageType(Settings.Type.CLIPART);
     }
 
     @Override
@@ -63,7 +67,7 @@ public class PhotoGrid extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(final String query) {
                 adapter.clear();
-                if (searcher.prepare(query, new Settings(), new Callback(){
+                if (searcher.prepare(query, settings, new Callback(){
                     @Override
                     public void result(SearchResult searchResult) {
                         adapter.add(searchResult);
@@ -90,8 +94,19 @@ public class PhotoGrid extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-
+        if (id == R.id.action_settings) {
+            Intent intent = new Intent(PhotoGrid.this, SearchSettings.class);
+            intent.putExtra("settings", settings);
+            startActivityForResult(intent, SETTINGS_CODE);
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SETTINGS_CODE && resultCode == RESULT_OK) {
+            this.settings = (Settings)data.getParcelableExtra("settings");
+        }
     }
 }

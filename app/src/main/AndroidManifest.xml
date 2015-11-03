@@ -22,6 +22,10 @@
             android:name=".PhotoView"
             android:label="@string/title_activity_photo_view" >
         </activity>
+        <activity
+            android:name=".SearchSettings"
+            android:label="@string/title_activity_search_settings" >
+        </activity>
     </application>
 
 </manifest>

@@ -4,4 +4,42 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_photo_view">PhotoView</string>
+    <string name="title_activity_search_settings">SearchSettings</string>
+    <string name="image_type">Image Type</string>
+    <string name="image_size">Image Size</string>
+    <string name="image_color">Image Color</string>
+    <string name="site_search">Site</string>
+    <string name="apply">Apply</string>
+
+    <string-array name="image_colors">
+        <item>All</item>
+        <item>Black</item>
+        <item>Blue</item>
+        <item>Brown</item>
+        <item>Gray</item>
+        <item>Green</item>
+        <item>Orange</item>
+        <item>Pink</item>
+        <item>Purple</item>
+        <item>Red</item>
+        <item>Teal</item>
+        <item>White</item>
+        <item>Yellow</item>
+    </string-array>
+
+    <string-array name="image_type">
+        <item>All</item>
+        <item>Clip Art</item>
+        <item>Face</item>
+        <item>Line Art</item>
+        <item>Photo</item>
+    </string-array>
+
+    <string-array name="image_size">
+        <item>All</item>
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+        <item>Extra Large</item>
+    </string-array>
 </resources>
