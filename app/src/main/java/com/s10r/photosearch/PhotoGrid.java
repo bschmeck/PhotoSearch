@@ -1,15 +1,18 @@
 package com.s10r.photosearch;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.s10r.photosearch.searcher.PhotoSearch;
 import com.s10r.photosearch.searcher.Callback;
+import com.s10r.photosearch.searcher.PhotoSearch;
 import com.s10r.photosearch.searcher.Settings;
 
 import java.util.ArrayList;
@@ -29,6 +32,15 @@ public class PhotoGrid extends AppCompatActivity {
         GridView gvResults = (GridView)findViewById(R.id.gridView);
         gvResults.setAdapter(adapter);
         this.searcher = new PhotoSearch();
+        gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SearchResult searchResult = results.get(position);
+                Intent intent = new Intent(PhotoGrid.this, PhotoView.class);
+                intent.putExtra("url", searchResult.getImageUrl());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

@@ -29,7 +29,7 @@ public class SearchResultAdapter extends ArrayAdapter<SearchResult> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         SearchResult searchResult = getItem(position);
-        ViewHolder viewHolder;
+        final ViewHolder viewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.result_image, parent, false);
             viewHolder = new ViewHolder();
@@ -44,6 +44,8 @@ public class SearchResultAdapter extends ArrayAdapter<SearchResult> {
 
         return convertView;
     }
+
+
 
     private void populate(SearchResult searchResult, ViewHolder viewHolder) {
         //viewHolder.ivResult.setImageResource(0);
